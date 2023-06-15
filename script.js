@@ -101,7 +101,12 @@ $(document).ready(function() {
                 // Отобразить таблицу и скрыть сообщение о загрузке
                 $('#results').show();
                 $('#loading-message').hide();
-            }
+            },
+			error: function(xhr, status, error) {
+				// Этот код будет вызван в случае ошибки
+				var response = xhr.responseText;
+				$('#loading-message').html("Произошла ошибка: " + error + ". Ответ сервера: " + response).show();
+			}
         });
     });
 

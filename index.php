@@ -16,7 +16,7 @@
 
 <script>
 var list_party = <?php echo json_encode(list_party()); ?>;
-var siteUrl = '<?php echo "https://" . $_SERVER['SERVER_NAME'] . $dir_name; //прописать если папка другая ?>'; 
+var siteUrl = '<?php echo $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $dir_name; ?>';
 </script>
 
 

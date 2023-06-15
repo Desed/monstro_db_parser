@@ -7,11 +7,6 @@ require_once 'Monstro_parser.php';
 $db = new \SeinopSys\PostgresDb($db_name, $host, $user, $password);
 $db -> getConnection();
 
-
-
-//print_r(domain_count_parse('d_mix'));
-
-
 function domain_count_parse($party) {
 	global $db;
 	
@@ -35,6 +30,7 @@ function domain_count_parse($party) {
 			$offset += $limit; // Увеличиваем смещение для следующей страницы
 		}
 	}
+
 	
 	uasort($profiles_list, function($a, $b) {
 		return $b['count_domains'] - $a['count_domains'];
@@ -105,26 +101,26 @@ function cookies_check($cookie_base64) {
 	$count_domains = 0;
 	$metrika_date = 0;
 	$domains = [];
+	$metrika_dates = [];
 	
 	if ($cookies['cookies']) {
 		foreach ($cookies['cookies'] as $value) {
 			if ($value['name'] == '_ym_uid') {
-				
-				if ($count_domains == 0) {
-					$metrika_date = format_date($value['value']);
-				}
-				
-				$count_domains++; //считаем колво уник доменов с метрикой
+					$metrika_dates[] = substr($value['value'], 0, 10);
+					$count_domains++; //считаем колво уник доменов с метрикой
 			}
 		}
 	}
+
+		sort($metrika_dates, SORT_NUMERIC);
+		$metrika_date = format_date($metrika_dates[0]);
 	
 	return array('count_domains' => $count_domains, 'create_date' => $metrika_date['create_date'], 'profile_days' => $metrika_date['profile_days']);
 }
 
 
-function format_date($cookie_unixdate) {
-	$timestamp = substr($cookie_unixdate, 0, 10);
+function format_date($timestamp) {
+	$timestamp = (int)$timestamp;
 	$profile_days = (time() - $timestamp) / 86400;
 	$profile_days = round($profile_days, 0);
 	$create_date = gmdate("Y-m-d", $timestamp);
