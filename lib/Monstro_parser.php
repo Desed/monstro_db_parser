@@ -24,7 +24,9 @@ function domain_count_parse($party) {
 			$continue = false;
 		} else {
 			foreach ($cookies_list as $value) {
-				$profiles_list[$value['pid']] = cookies_check($value['cookies']);
+				if ($value['cookies']){
+					$profiles_list[$value['pid']] = cookies_check($value['cookies']);
+				}
 			}
 			
 			$offset += $limit; // Увеличиваем смещение для следующей страницы
@@ -113,7 +115,11 @@ function cookies_check($cookie_base64) {
 	}
 
 		sort($metrika_dates, SORT_NUMERIC);
-		$metrika_date = format_date($metrika_dates[0]);
+		if(array_key_exists(0,$metrika_dates)){
+			$metrika_date = format_date($metrika_dates[0]);
+		} else {
+			$metrika_date = format_date(0);
+		}
 	
 	return array('count_domains' => $count_domains, 'create_date' => $metrika_date['create_date'], 'profile_days' => $metrika_date['profile_days']);
 }
